@@ -31,6 +31,9 @@ final class Loader
     /** @var bool */
     private static $hooked = false;
 
+    /** @var bool|null Memoised answer of enabled(). */
+    private static $enabled = null;
+
     /**
      * Register a copy of the package.
      *
@@ -72,7 +75,7 @@ final class Loader
      */
     public static function boot()
     {
-        if (self::$booted !== null) {
+        if (self::$booted !== null || !self::enabled()) {
             return;
         }
 

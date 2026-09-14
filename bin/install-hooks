@@ -41,7 +41,10 @@ if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
     exit(1);
 }
 
-if (file_exists($hook) && strpos((string) file_get_contents($hook), $marker) === false) {
+$existing = file_exists($hook) ? (string) file_get_contents($hook) : '';
+$managed  = strpos($existing, $marker) !== false || strpos($existing, '# managed by gnnpls/wp-self-test') !== false;
+
+if ($existing !== '' && !$managed) {
     fwrite(STDOUT, "[wp-self-test] {$hook} exists and is not managed by this package; left untouched.\n");
 } else {
     $shim = "#!/usr/bin/env bash\n{$marker}\nexec bash \"\$(git rev-parse --show-toplevel)/{$relative}/bin/pre-push\" \"\$@\"\n";

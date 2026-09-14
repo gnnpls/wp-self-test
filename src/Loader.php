@@ -140,6 +140,24 @@ final class Loader
     }
 
     /**
+     * The site's environment: `WP_ENV` when defined (Bedrock-style),
+     * otherwise `wp_get_environment_type()` (the `WP_ENVIRONMENT_TYPE`
+     * environment variable or constant; `production` when unset).
+     *
+     * @return string
+     *
+     * @since 0.6.0
+     */
+    public static function environment()
+    {
+        if (defined('WP_ENV')) {
+            return (string) WP_ENV;
+        }
+
+        return function_exists('wp_get_environment_type') ? wp_get_environment_type() : 'production';
+    }
+
+    /**
      * @param array<string,string> $copies Path => version.
      *
      * @return string|null Path with the highest version.

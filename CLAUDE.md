@@ -22,6 +22,7 @@ Cases are exercised from a consumer plugin, e.g. `php bin/run.php --bootstrap=te
 
 **Multi-copy loading.** Several active plugins may each ship a copy. Composer's `autoload.files` includes `bootstrap.php` from every copy → each calls `Loader::register($version, $dir)` → on `plugins_loaded` (-100) `Loader::boot()` picks the highest `version.php` and installs its own PSR-4 autoloader for `Gnnpls\SelfTest\` from that copy's `src/`. Consequences:
 - `src/Loader.php` is declared by whichever plugin loads first, possibly an **older** copy. It must stay backwards compatible, and `bootstrap.php` guards with `method_exists`. Any new `Loader` method that `boot()` calls must actually ship in the tag — 0.4.0 and 0.6.0 both shipped broken because of this (see CHANGELOG 0.4.1 / 0.6.1).
+- `Loader::register()` can run before `wp-includes/plugin.php` (Composer `autoload.files` from `wp-config.php`: Bedrock root installs, every WP-CLI command). Then it pre-seeds `$wp_filter['plugins_loaded'][-100]`; it must never boot there, because `boot()` needs the Plugin API (0.6.3 fixed a fatal on every WP-CLI command).
 - Composer's `autoload-dev` PSR-4 is for development only; at runtime `Loader::autoload()` does the class loading.
 - Every PHP file bails on `!defined('ABSPATH')`; `version.php` returns `'0.0.0'` outside WordPress.
 

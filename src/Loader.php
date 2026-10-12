@@ -58,12 +58,42 @@ final class Loader
         }
         self::$hooked = true;
 
-        if (!function_exists('add_action') || did_action('plugins_loaded')) {
+        if (!function_exists('add_action')) {
+            self::preinit_boot_hook();
+            return;
+        }
+
+        if (did_action('plugins_loaded')) {
             self::boot();
             return;
         }
 
         add_action('plugins_loaded', [self::class, 'boot'], -100);
+    }
+
+    /**
+     * Queue boot() on `plugins_loaded` before the Plugin API is loaded.
+     *
+     * Bedrock's wp-config requires the root vendor/autoload.php (and so this
+     * package's bootstrap.php) before WordPress loads plugin.php; WP-CLI has
+     * already defined ABSPATH by then. Booting there calls apply_filters()
+     * before it exists. WordPress turns a pre-filled $wp_filter array into
+     * WP_Hook objects when plugin.php loads, so the hook is added there.
+     *
+     * @return void
+     *
+     * @since 0.6.3
+     */
+    private static function preinit_boot_hook()
+    {
+        if (!isset($GLOBALS['wp_filter']) || !is_array($GLOBALS['wp_filter'])) {
+            $GLOBALS['wp_filter'] = [];
+        }
+
+        $GLOBALS['wp_filter']['plugins_loaded'][-100][] = [
+            'function'      => [self::class, 'boot'],
+            'accepted_args' => 1,
+        ];
     }
 
     /**

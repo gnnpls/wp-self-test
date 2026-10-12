@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3] - 2026-10-12
+
+### Fixed
+- Fatal `Call to undefined function Gnnpls\SelfTest\apply_filters()` when the package is required from a Bedrock site's root `composer.json`. Bedrock's `wp-config` loads the root `vendor/autoload.php` (and with it `bootstrap.php`) before WordPress loads the Plugin API, and WP-CLI has already defined `ABSPATH` at that point, so `Loader::register()` booted immediately and every `wp` command on the site exited with status 255 (seen as "could not reset the staging database" in the Motivar CI). Without the Plugin API the loader now pre-registers `boot()` on `plugins_loaded` (-100) in the global `$wp_filter` array, which WordPress converts into hooks when `plugin.php` loads.
+
 ## [0.6.2] - 2026-10-12
 
 ### Added

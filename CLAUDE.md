@@ -26,7 +26,7 @@ Cases are exercised from a consumer plugin, e.g. `php bin/run.php --bootstrap=te
 - Composer's `autoload-dev` PSR-4 is for development only; at runtime `Loader::autoload()` does the class loading.
 - Every PHP file bails on `!defined('ABSPATH')`; `version.php` returns `'0.0.0'` outside WordPress.
 
-**Gates (two layers).** `Loader::enabled()` (`mwp_self_test_enabled`, default true everywhere) decides whether anything boots. `Config::ui_enabled()` (`mwp_self_test_ui_enabled`, false when `Loader::environment()` is `production`; environment = `WP_ENV` if defined else `wp_get_environment_type()`) gates only the dashboard, its REST routes and the WP_CLI shim. CLI commands and abilities register regardless of environment. Capability: `Config::capability()`.
+**Gates (two layers).** `Loader::enabled()` (`mwp_self_test_enabled`, default false on `production` since 0.7.0) decides whether anything boots; `Self_Test::boot()` re-applies it through `Config::enabled()` when an older Loader without `GATES_PRODUCTION` is the declared one. `Config::ui_enabled()` (`mwp_self_test_ui_enabled`, false when `Loader::environment()` is `production`; environment = `WP_ENV` if defined else `wp_get_environment_type()`) gates only the dashboard, its REST routes and the WP_CLI shim. Outside production, CLI commands and abilities always register. Capability: `Config::capability()`.
 
 **Boot flow.** `Self_Test::boot()` loads `Wp_Cli_Shim.php` when needed, fires `mwp_self_test_register` at `init` 0 (consumers call `Registry::register()`), attaches `Surfaces\Cli` and `Surfaces\Abilities` always, and `Surfaces\Rest` + `Admin` (renders `templates/dashboard.php` with `assets/`) only when the UI is enabled.
 

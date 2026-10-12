@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-There is no test suite, build step or `composer install` needed in this repo itself; the only automated check is lint (mirrors `.gitlab-ci.yml`):
+There is no test suite, build step or `composer install` needed in this repo itself; the only automated check is lint (mirrors `.github/workflows/lint.yml`, which runs it on PHP 7.4 and 8.3 plus `composer validate --strict`):
 
 ```bash
 git ls-files -z -- "*.php" | xargs -0 -n1 php -l >/dev/null
@@ -38,4 +38,6 @@ Cases are exercised from a consumer plugin, e.g. `php bin/run.php --bootstrap=te
 - PHP ≥ 7.4, namespace `Gnnpls\SelfTest`, class files named `Snake_Case.php`, WordPress-style docblocks with `@since` on every method and above every `do_action`/`apply_filters`.
 - Public names are stable API and were deliberately **not** renamed in 0.3.0: hooks `mwp_self_test_*`, command `wp mwp self-test`, routes `mwp-self-test/v1`, abilities `mwp-self-test/*`, option `mwp_self_test_state`. New hooks go in `HOOKS.md` (full reference) and the README "Filters and actions" table.
 - Releasing: bump `version.php`, add a CHANGELOG.md entry (Keep a Changelog, SemVer), and tag `vX.Y.Z` — all three together. The newest-copy-wins loader depends on `version.php` being correct.
-- The package intentionally ships no CI template (removed in 0.5.0); the consumer's pre-push hook is the gate.
+- The package intentionally ships no CI template for consumers (removed in 0.5.0); the consumer's pre-push hook is the gate.
+- Hosting: GitHub `gnnpls/wp-self-test` is the only remote, published on Packagist. The old GitLab project is archived; never push there. Tags `v0.4.0` and `v0.6.0` were removed because they fatal on boot.
+- `.gitattributes` keeps dev-only files (`CLAUDE.md`, `.github/`, `assets/sass/`) out of Composer dist archives; add new dev-only paths there.

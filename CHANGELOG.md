@@ -5,16 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.2] - 2026-10-12
 
 ### Added
 - `CLAUDE.md` with repository guidance for Claude Code.
 - `HOOKS.md`: every action and filter with its parameters and firing point.
+- `LICENSE` (GPL-2.0, as declared in `composer.json`).
+- `.gitattributes` keeping development-only files out of Composer dist archives.
+- GitHub Actions workflow: PHP syntax check on 7.4 and 8.3 and `composer validate --strict`.
 
 ### Changed
 - Package metadata: author Nikos Giannopoulos <nikos@gnnpls.com>, homepage https://gnnpls.com. Removed the remaining references to the previous vendor from code comments and docs. Hook, route, command, ability and option names (`mwp_*` / `mwp-self-test`) are unchanged.
+- The package moved to GitHub (`gnnpls/wp-self-test`) and is installed from Packagist: consumers drop any `repositories` entry pointing at the old GitLab URL and run `composer update gnnpls/wp-self-test` (the history was rewritten, so commit hashes pinned in old lock files no longer exist).
+- `composer.json`: `keywords`, `support` (issues, source, email); the description no longer mentions CI.
 
 ### Removed
+- `.gitlab-ci.yml` (replaced by the GitHub Actions workflow).
+- Tags `v0.4.0` and `v0.6.0`, which fatal on `plugins_loaded`; use `v0.4.1` / `v0.6.1` or later.
 - `bin/install-hooks` no longer treats a pre-push shim carrying the pre-0.3.0 marker as its own; re-run `composer install` (or delete `.githooks/pre-push`) if such a shim is still present.
 
 ## [0.6.1] - 2026-09-14

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `CLAUDE.md` with repository guidance for Claude Code.
+- `HOOKS.md`: every action and filter with its parameters and firing point.
+
+### Changed
+- Package metadata: author Nikos Giannopoulos <nikos@gnnpls.com>, homepage https://gnnpls.com. Removed the remaining references to the previous vendor from code comments and docs. Hook, route, command, ability and option names (`mwp_*` / `mwp-self-test`) are unchanged.
+
+### Removed
+- `bin/install-hooks` no longer treats a pre-push shim carrying the pre-0.3.0 marker as its own; re-run `composer install` (or delete `.githooks/pre-push`) if such a shim is still present.
+
 ## [0.6.1] - 2026-09-14
 
 ### Fixed
@@ -37,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.0] - 2026-09-14
 
 ### Changed
-- **Renamed**: the Composer package is `gnnpls/wp-self-test` and the PHP namespace `Gnnpls\SelfTest` (was `gnnpls/wp-self-test`, `Gnnpls\SelfTest`). Hook names (`mwp_self_test_*`), the `wp mwp self-test` commands, the `mwp-self-test/v1` routes, the `mwp-self-test/*` abilities and the `mwp_self_test_state` option are unchanged. Consumers update their `require`, their `use` statements and the `lib/gnnpls/wp-self-test` paths in `post-install-cmd`, `.gitlab-ci.yml` and test bootstraps.
+- **Renamed**: the Composer package is `gnnpls/wp-self-test` and the PHP namespace `Gnnpls\SelfTest`. Hook names (`mwp_self_test_*`), the `wp mwp self-test` commands, the `mwp-self-test/v1` routes, the `mwp-self-test/*` abilities and the `mwp_self_test_state` option are unchanged. Consumers update their `require`, their `use` statements and the `lib/gnnpls/wp-self-test` paths in `post-install-cmd`, `.gitlab-ci.yml` and test bootstraps.
 
 ## [0.2.0] - 2026-09-14
 
